@@ -18,12 +18,20 @@ public class MemberController {
 
     final private MemberService memberService;
 
-    // 회원가입
-    @PostMapping("/register")
-    public Boolean memberRegister (@RequestBody MemberRegisterForm requestForm) {
-        log.info("memberRegister()");
+    // 일반회원 회원가입
+    @PostMapping("/normal-register")
+    public Boolean normalRegister (@RequestBody MemberRegisterForm requestForm) {
+        log.info("normalRegister()");
 
-        return memberService.register(requestForm);
+        return memberService.normalRegister(requestForm);
+    }
+
+    // 사업자회원 회원가입
+    @PostMapping("/business-register")
+    public Boolean businessRegister (@RequestBody MemberRegisterForm requestForm) {
+        log.info("businessRegister()");
+
+        return memberService.businessRegister(requestForm);
     }
 
     // 로그인

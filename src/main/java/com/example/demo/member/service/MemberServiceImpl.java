@@ -3,7 +3,11 @@ package com.example.demo.member.service;
 import com.example.demo.member.controller.form.MemberLoginForm;
 import com.example.demo.member.controller.form.MemberRegisterForm;
 import com.example.demo.member.entity.Member;
+import com.example.demo.member.entity.MemberRole;
+import com.example.demo.member.entity.Role;
 import com.example.demo.member.repository.MemberRepository;
+import com.example.demo.member.repository.MemberRoleRepository;
+import com.example.demo.member.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,11 +22,13 @@ import java.util.UUID;
 public class MemberServiceImpl implements MemberService{
 
     final private MemberRepository memberRepository;
-    private final PasswordEncoder encoder;
+    final private PasswordEncoder encoder;
+    final private RoleRepository roleRepository;
+    final private MemberRoleRepository memberRoleRepository;
 
     // 회원가입 - 비밀번호 암호화
     @Override
-    public Boolean register(MemberRegisterForm requestForm) {
+    public Boolean normalRegister(MemberRegisterForm requestForm) {
         final Optional<Member> maybeMember = memberRepository.findByEmail(requestForm.getEmail());
 
         if (maybeMember.isPresent()) {
@@ -36,9 +42,19 @@ public class MemberServiceImpl implements MemberService{
         final Member member = requestForm.toMember();
         member.setPassword(encryptedPassword);
 
+        // 회원 타입 부여
+        final Role role = roleRepository.findByRoleType(requestForm.getRoleType()).get();
+        final MemberRole accountRole = new MemberRole(role, member);
+        memberRoleRepository.save(accountRole);
+
         memberRepository.save(member);
 
         return true;
+    }
+
+    @Override
+    public Boolean businessRegister(MemberRegisterForm requestForm) {
+        return null;
     }
 
     // 로그인 - 같은 비밀번호 matches 사용하여 확인하도록
