@@ -14,7 +14,7 @@ public class MemberRegisterForm {
 
     private String email;
     private String password;
-    private String businessNumber;
+    private Long businessNumber;
     private RoleType roleType;
 
     public Member toMember () {
