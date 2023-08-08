@@ -11,7 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-    private final String[] allowedUrls = {"/", "/swagger-ui/**", "/v3/**", "member/register", "/sign-in"}; // sign-up, sign-in 임의로 추가
+    private final String[] allowedUrls = {"/", "/swagger-ui/**", "/v3/**", "/member/register", "/member/login"}; // sign-up, sign-in 임의로 추가
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
