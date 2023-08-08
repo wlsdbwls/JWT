@@ -1,21 +1,20 @@
 package com.example.demo.member.service;
 
-import com.example.demo.member.controller.form.MemberLoginForm;
-import com.example.demo.member.controller.form.MemberRegisterForm;
+import com.example.demo.member.controller.form.request.MemberLoginForm;
+import com.example.demo.member.controller.form.request.MemberRegisterForm;
 import com.example.demo.member.entity.Member;
 import com.example.demo.member.entity.MemberRole;
 import com.example.demo.member.entity.Role;
 import com.example.demo.member.repository.MemberRepository;
 import com.example.demo.member.repository.MemberRoleRepository;
 import com.example.demo.member.repository.RoleRepository;
-import jakarta.transaction.Transactional;
+import com.example.demo.security.service.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -26,9 +25,9 @@ public class MemberServiceImpl implements MemberService{
     final private PasswordEncoder encoder;
     final private RoleRepository roleRepository;
     final private MemberRoleRepository memberRoleRepository;
+    private final TokenProvider tokenProvider;
 
     // 회원가입 - 비밀번호 암호화
-    @Transactional
     @Override
     public Boolean normalRegister(MemberRegisterForm requestForm) {
         final Optional<Member> maybeMember = memberRepository.findByEmail(requestForm.getEmail());
@@ -91,18 +90,21 @@ public class MemberServiceImpl implements MemberService{
     }
 
     // 로그인 - 같은 비밀번호 matches 사용하여 확인하도록
+    // 로그인하면 토큰 발급
     @Override
-    public Boolean login(MemberLoginForm requestForm) {
+    public String login(MemberLoginForm requestForm) {
         Optional<Member> maybeMember = memberRepository.findByEmail(requestForm.getEmail());
 
         if(maybeMember.isPresent()) {
             Member member = maybeMember.get();
 
             if (encoder.matches(requestForm.getPassword(), member.getPassword())) {
-                return true;
+                String token = tokenProvider.createToken(String.format("%s", member.getEmail()));	// 토큰 생성
+
+                return token;
             }
         }
 
-        return false;
+        return "";
     }
 }

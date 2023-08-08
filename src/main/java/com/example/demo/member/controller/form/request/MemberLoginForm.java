@@ -1,4 +1,4 @@
-package com.example.demo.member.controller.form;
+package com.example.demo.member.controller.form.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,4 +11,5 @@ public class MemberLoginForm {
 
     private String email;
     private String password;
+    private String token;
 }

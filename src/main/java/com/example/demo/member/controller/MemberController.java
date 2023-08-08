@@ -1,7 +1,7 @@
 package com.example.demo.member.controller;
 
-import com.example.demo.member.controller.form.MemberLoginForm;
-import com.example.demo.member.controller.form.MemberRegisterForm;
+import com.example.demo.member.controller.form.request.MemberLoginForm;
+import com.example.demo.member.controller.form.request.MemberRegisterForm;
 import com.example.demo.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class MemberController {
 
     // 로그인
     @PostMapping("/login")
-    public Boolean memberLogin (@RequestBody MemberLoginForm requestForm){
+    public String memberLogin (@RequestBody MemberLoginForm requestForm){
         log.info("memberLogin()");
 
         return memberService.login(requestForm);
