@@ -5,6 +5,7 @@ import com.example.demo.member.controller.form.request.MemberRegisterForm;
 import com.example.demo.member.entity.Member;
 import com.example.demo.member.entity.MemberRole;
 import com.example.demo.member.entity.Role;
+import com.example.demo.member.entity.RoleType;
 import com.example.demo.member.repository.MemberRepository;
 import com.example.demo.member.repository.MemberRoleRepository;
 import com.example.demo.member.repository.RoleRepository;
@@ -25,7 +26,7 @@ public class MemberServiceImpl implements MemberService{
     final private PasswordEncoder encoder;
     final private RoleRepository roleRepository;
     final private MemberRoleRepository memberRoleRepository;
-    private final TokenProvider tokenProvider;
+    final private TokenProvider tokenProvider;
 
     // 회원가입 - 비밀번호 암호화
     @Override
@@ -47,8 +48,8 @@ public class MemberServiceImpl implements MemberService{
 
         // 회원 타입 부여
         final Role role = roleRepository.findByRoleType(requestForm.getRoleType()).get();
-        final MemberRole accountRole = new MemberRole(role, member);
-        memberRoleRepository.save(accountRole);
+        final MemberRole memberRole = new MemberRole(role, member);
+        memberRoleRepository.save(memberRole);
 
         return true;
     }
